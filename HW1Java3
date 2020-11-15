@@ -1,0 +1,70 @@
+package ru.sterus.Java3.lessonA;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+//Использовал статику, но можно было по-другому, просто через объект типа Main
+
+// 1 и 2 задание
+public class Main {
+    public static void main(String[] args) {
+
+        Character[] arr  = {'a', 'b'};
+        System.out.println(Arrays.toString(arr));
+        replace(arr, 0, 1);
+        System.out.println(Arrays.toString(arr));
+
+        ArrayList<Character> list = toArrayList(arr);
+        System.out.println(list);
+        System.out.println(list.getClass());
+    }
+
+    public static <T> void replace(T[] arr, int firstI, int lastI){
+        T a = arr[firstI];
+        arr[firstI] = arr[lastI];
+        arr[lastI] = a;
+    }
+
+    public static <T> ArrayList<T> toArrayList(T[] arr){
+        return new ArrayList<T>(Arrays.asList(arr));
+    }
+}
+
+
+// 3 задание я сделал в одном классе, просто не хотел много файлов создавать
+public abstract class Fruit {
+    public static float weight;
+
+    private class Orange extends Fruit{
+        float weight = 1.5f;
+    }
+    private class Apple extends Fruit{
+        float weight = 1.0f;
+    }
+
+    private class Box<T extends Fruit>{
+        ArrayList<T> box;
+        float weightOfBox;
+
+        Box(ArrayList<T> arrayList){
+            box = arrayList;
+        }
+
+        public float getWeight(){
+            weightOfBox = T.weight * box.size();
+            return weightOfBox;
+        }
+        public boolean compare(Box<T> anotherBox){
+            return anotherBox.getWeight() == this.getWeight();
+        }
+
+        public void get(ArrayList<T> arr){
+            box.addAll(arr);
+        }
+
+        public void send(Box<T> boxToSend){
+            boxToSend.get(box);
+            box = new ArrayList<>();
+        }
+    }
+}
