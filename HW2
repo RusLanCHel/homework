@@ -1,0 +1,72 @@
+package lessonB;
+
+
+import java.sql.*;
+
+public class Main {
+
+    //я не очень все хорошо понял поэтому думаю что многое сделал неправильно надеюсь на разборе пойму
+
+    private static Connection connection;
+    private static Statement statement;
+
+    public static void main(String[] args) {
+        try {
+            connect();
+
+
+
+            disconnect();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+    //создание таблицы
+    // я сделал так но у меня проблема как сделать так чтобы в sql запросе учитывались именно переменные а не строки, то есть чтобы генерировалась таблица не с именем "tableName" а с именем которое находиться в переменной tableName???
+
+    private static void createTable(Statement statement, String tableName, String[] nameC, String[] types) throws SQLException {
+        statement.execute("create table if not exist tableName (nameC[0] types[0])");
+        for(int i = 1; i < nameC.length; i++){
+            statement.executeUpdate("alter table tableName add column nameC[i] types[i]");
+        }
+    }
+    //добавление записи
+    private static void insertIntoTable(Statement statement, String tableName, String[] names, String[] values) throws SQLException {
+        statement.executeUpdate("insert into tableName (names) values (values)");
+    }
+    //получение записи
+    private static ResultSet getFromTable(Statement statement, String tableName, String[] p, String conditions) throws SQLException {
+        ResultSet rs = statement.executeQuery("Select p from tableName where conditions");
+        return rs;
+    };
+    //удаление записи
+    private static void deleteInTable(Statement statement, String tableName,String conditions) throws SQLException {
+        statement.execute("delete from tableName where conditions");
+    }
+    //удаление таблицы
+    private static void deleteTable(Statement statement, String tableName) throws SQLException {
+        statement.execute("drop table if exist tableName");
+    }
+
+    private static void printRS(ResultSet rs, int kol) throws SQLException {
+        while(rs.next()){
+            for(int i = 1; i <= kol; i++){
+                System.out.print(rs.getString(i) + " ");
+            }
+            System.out.print("\n");
+        }
+    }
+
+    private static void connect() throws ClassNotFoundException, SQLException {
+        Class.forName("org.sqlite.JDBC");
+        connection = DriverManager.getConnection("jdbc:sqlite:main.db");
+        statement = connection.createStatement();
+    }
+
+    private static void disconnect() throws SQLException {
+        connection.close();
+    }
+}
