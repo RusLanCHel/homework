@@ -1,0 +1,52 @@
+package lessonC;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
+public class Main {
+    static byte[] arr = new byte[1024];
+    static int kol = 0;
+    public static void main(String[] args) {
+        byte[] buf = new byte[20];
+        try(FileInputStream fis = new FileInputStream("demo.txt")){
+            int x;
+            while((x = fis.read(buf)) > 0) {
+                for(int i = 0; i < x; i++) {
+                    arr[kol] = buf[i];
+                    kol += 1;
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println(Arrays.toString(arr));
+        for(int i = 0; i < arr.length; i++){
+            System.out.print((char) arr[i]);
+        }
+    }
+    
+    public static void conn(ArrayList<FileInputStream> input, String name) throws IOException {
+        FileOutputStream fos = new FileOutputStream(name);
+        int it = 0;
+        FileInputStream now;
+        for(int i = 0; i < input.size(); i++){
+            byte[] answer1 = new byte[1024];
+            byte[] buf = new byte[256];
+            now = input.get(i);
+            int count;
+            while((count = now.read(buf)) > 0){
+                for(int l = 0; l < count; l++){
+                    answer1[it] = buf[l];
+                    it++;
+                }
+            }
+            fos.write(answer1);
+        }
+        fos.close();
+    }
+}
